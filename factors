@@ -1,46 +1,36 @@
 #!/usr/bin/python3
-import sys
+from sys import argv
+import math
+"""Factorize as many numbers as possible into a product of 2 smaller nums"""
 
 
-def factorize(num):
-    """
-    Factorizes a given number into a list of prime factors.
-
-    Args:
-        num (int): The number to factorize.
-
-    Returns:
-        list: A list of prime factors of the number.
-    """
-    factors = []
-    for i in range(2, int(num ** 0.5) + 1):
-        while num % i == 0:
-            factors.append(i)
-            num //= i
-    if num > 1:
-        factors.append(num)
-    return factors
-
-
-def main():
-    """
-    Main function to read numbers from a file and print their factorizations.
-
-    Reads a file path from the command-line argument, opens the file,
-    and for each line, factorizes the number and prints the factorization.
-    """
-    if len(sys.argv) != 2:
-        print("Usage: factors <file>")
-        return
-
-    file_path = sys.argv[1]
-    with open(file_path, 'r') as file:
-        for line in file:
-            num = int(line)
-            factors = factorize(num)
-            print(f"{num}={factors[0]}*{factors[1]}")
+def factor_num(num):
+    """gets the factors of a number"""
+    if num % 2 == 0:
+        i = 2
+        print("{}={}*{}".format(num, int(num//i), i))
+    else:
+        sq = int(math.sqrt(num)) + 1
+        for i in range(3, sq, +2):
+            if num % i == 0:
+                print("{}={}*{}".format(num, int(num//i), i))
+                return
+            if num % (sq + i) == 0:
+                print("{}={}*{}".format(num, sq + i, int(num//(sq + i))))
+                return
+            if num % (sq - i) == 0:
+                print("{}={}*{}".format(num, sq - 1, int(num//(sq - i))))
+                return
 
 
-if __name__ == '__main__':
-    main()
+def factors(filename):
+    """read_file and prints them out"""
 
+    with open(filename, encoding="utf-8") as my_file:
+        for i in my_file.readlines():
+            n = int(i)
+            result = factor_num(n)
+
+
+if __name__ == "__main__":
+    factor_num(argv[1])       
