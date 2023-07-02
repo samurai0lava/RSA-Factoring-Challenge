@@ -1,63 +1,45 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
+import sys
 
-/**
- * factorize - Factorizes a given number into a product of two smaller numbers.
- *
- * @num: The number to factorize.
- */
-void factorize(int num)
-{
-    int i;
 
-    for (i = 2; i <= sqrt(num); i++)
-    {
-        while (num % i == 0)
-        {
-            printf("%d=%d*%d\n", num, i, num / i);
-            num /= i;
-        }
-    }
+def factorize(num):
+    """
+    Factorizes a given number into a list of prime factors.
 
-    if (num > 1)
-    {
-        printf("%d=%d*%d\n", num, num, 1);
-    }
-}
+    Args:
+        num (int): The number to factorize.
 
-/**
- * main - Entry point of the program.
- *
- * @argc: The number of command-line arguments.
- * @argv: An array of command-line argument strings.
- *
- * Return: 0 on success, 1 on failure.
- */
-int main(int argc, char *argv[])
-{
-    if (argc != 2)
-    {
-        printf("Usage: factors <file>\n");
-        return 1;
-    }
+    Returns:
+        list: A list of prime factors of the number.
+    """
+    factors = []
+    for i in range(2, int(num ** 0.5) + 1):
+        while num % i == 0:
+            factors.append(i)
+            num //= i
+    if num > 1:
+        factors.append(num)
+    return factors
 
-    char *file_path = argv[1];
-    FILE *file = fopen(file_path, "r");
-    if (file == NULL)
-    {
-        printf("Error opening file: %s\n", file_path);
-        return 1;
-    }
 
-    char line[100];
-    while (fgets(line, sizeof(line), file))
-    {
-        int num = atoi(line);
-        factorize(num);
-    }
+def main():
+    """
+    Main function to read numbers from a file and print their factorizations.
 
-    fclose(file);
-    return 0;
-}
+    Reads a file path from the command-line argument, opens the file,
+    and for each line, factorizes the number and prints the factorization.
+    """
+    if len(sys.argv) != 2:
+        print("Usage: factors <file>")
+        return
+
+    file_path = sys.argv[1]
+    with open(file_path, 'r') as file:
+        for line in file:
+            num = int(line)
+            factors = factorize(num)
+            print(f"{num}={factors[0]}*{factors[1]}")
+
+
+if __name__ == '__main__':
+    main()
 
